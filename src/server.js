@@ -11,9 +11,17 @@ const cookieParser = require("cookie-parser");
 const adminAuthentication = require("./middleware/adminAuthentication.js");
 const validateQuiz = require("./utils/validateQuiz.js");
 const Quiz = require("./models/quizeSchema.js");
+const cors = require("cors");
+
 app.use(express.json()); // JSON body parsing
 app.use(cookieParser()); // Cookie parsing
-
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
 app.post("/admin/signup", adminEmailAuth, async (req, res) => {
   try {
     const { email, password, name, photoUrl } = req.body;
@@ -42,10 +50,10 @@ app.post("/admin/signup", adminEmailAuth, async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 app.post("/admin/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email, password);
     if (!email || !password) {
       return res.status(400).json({ error: "Please enter all fields" });
     }
@@ -61,7 +69,9 @@ app.post("/admin/login", async (req, res) => {
       expiresIn: "1d",
     });
     res.cookie("token", token);
-    res.status(200).json({ message: "Admin logged in successfully" });
+    res
+      .status(200)
+      .json({ message: "Admin logged in successfully", admin: admin });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -70,6 +80,9 @@ app.post("/admin/login", async (req, res) => {
 app.post("/admin/logout", adminAuthentication, async (req, res) => {
   res.clearCookie("token");
   res.status(200).json({ message: "Admin logged out successfully" });
+});
+app.get("/admin/me", adminAuthentication, async (req, res) => {
+  res.status(200).json({ admin: req.admin });
 });
 
 app.post("/admin/add/quizzes", adminAuthentication, async (req, res) => {
@@ -144,9 +157,11 @@ app.post("/admin/add/quizzes", adminAuthentication, async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-app.post("/admin/update/quizzes/:id", adminAuthentication, async (req, res) => {
+app.put("/admin/update/quizzes/:id", adminAuthentication, async (req, res) => {
+  console.log(req.params.id);
   try {
     const { isTrending } = req.body;
+    console.log(typeof isTrending);
     if (typeof isTrending !== "boolean") {
       return res
         .status(400)
@@ -221,7 +236,7 @@ app.get("/quizzes", async (req, res) => {
 app.use("/", (req, res, err) => {
   //
   if (err) {
-    res.status(500).json({ err: "something went wrong re baba" });
+    res.status(500).json({ error: "something went wrong " });
   }
 });
 connectDB()

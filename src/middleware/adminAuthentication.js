@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const Admin = require("../models/adminSchema");
+
 const adminAuthentication = async (req, res, next) => {
   try {
     const token = req.cookies.token;
