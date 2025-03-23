@@ -1,3 +1,4 @@
+const validator = require("validator");
 function validateUserSignup(userData) {
   const errors = {};
 

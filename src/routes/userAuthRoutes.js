@@ -115,10 +115,29 @@ userRoute.put("/user/update-profile", userAuth, async (req, res) => {
   try {
     const { firstName, lastName, age, city, state, country, imageUrl } =
       req.body;
+    const allowedFields = [
+      "firstName",
+      "lastName",
+      "age",
+      "city",
+      "state",
+      "country",
+      "imageUrl",
+      "socialLogin",
+    ];
+
+    const receivedFields = Object.keys(req.body);
+    const isAllowed = receivedFields.every((field) =>
+      allowedFields.includes(field)
+    );
+
+    if (!isAllowed) {
+      return res.status(400).json({ message: "Invalid fields in request" });
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user.userId,
-      { firstName, lastName, age, city, state, country, imageUrl },
+      { firstName, lastName, age, city, state, country, imageUrl, socialLogin },
       { new: true, runValidators: true }
     ).select("-password");
 

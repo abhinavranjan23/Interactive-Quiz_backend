@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
-// Indexing for faster queries
 
 const userSchema = new Schema(
   {
@@ -84,6 +83,11 @@ const userSchema = new Schema(
     lastLogin: {
       type: Date,
       default: null,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
   },
   {

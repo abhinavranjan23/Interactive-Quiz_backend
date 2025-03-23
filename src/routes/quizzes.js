@@ -1,6 +1,8 @@
 const express = require("express");
 const quizzesRouter = express.Router();
 const Quiz = require("../models/quizeSchema.js");
+const userAuth = require("../middleware/userAuthentication.js");
+const mongoose = require("mongoose");
 
 quizzesRouter.get("/quizzes/trending", async (req, res) => {
   try {
@@ -24,6 +26,27 @@ quizzesRouter.get("/quizzes/trending", async (req, res) => {
     res.status(200).json({ quizzes: trendingQuizzes });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+quizzesRouter.get("/quizzes/data/:quizId", userAuth, async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(quizId)) {
+      return res.status(400).json({ error: "Invalid Quiz ID format" });
+    }
+
+    const quizData = await Quiz.findById(quizId);
+
+    if (!quizData) {
+      return res.status(404).json({ error: "Quiz not found" });
+    }
+
+    res.status(200).json({ data: quizData });
+  } catch (err) {
+    console.error("Error fetching quiz:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
