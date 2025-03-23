@@ -5,18 +5,18 @@ const quizSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
-      index: true, // Faster search
+      index: true,
     },
     titleImage: String,
     isTrending: {
       type: Boolean,
       default: false,
-      index: true, // Index for filtering
+      index: true,
     },
     topic: {
       type: String,
       required: true,
-      index: true, // Faster search
+      index: true,
     },
     type: {
       type: String,
@@ -70,7 +70,6 @@ quizSchema.pre("save", function (next) {
   next();
 });
 
-// 🔹 Compound index for fast search
 quizSchema.index({ title: 1, topic: 1 });
 
 module.exports = mongoose.model("Quiz", quizSchema);
