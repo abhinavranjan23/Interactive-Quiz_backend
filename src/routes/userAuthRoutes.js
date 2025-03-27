@@ -100,9 +100,7 @@ userRoute.post("/user/logout", (req, res) => {
 });
 userRoute.get("/user/profile", userAuth, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id)
-      .select("-password")
-      .populate("quizAttempts.quizId", "title topic");
+    const user = await User.findById(req.user._id).select("-password");
     if (!user) return res.status(404).json({ message: "User not  " });
 
     res.json({ user: user });

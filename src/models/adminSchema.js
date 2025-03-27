@@ -15,6 +15,10 @@ const adminSchema = new mongoose.Schema(
       trim: true,
       match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"],
     },
+    role: {
+      type: String,
+      default: "admin",
+    },
 
     password: {
       type: String,
