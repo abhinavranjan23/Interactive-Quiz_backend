@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://brainrush.abhinavranjan.me/"],
+    origin: ["http://localhost:5173", "https://brainrush.abhinavranjan.me"],
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
