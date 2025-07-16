@@ -17,6 +17,10 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/", (req, res) => {
+  res.send("Welcome to Interactive Quiz API");
+});
 app.use("/", adminRouter);
 app.use("/", quizzesRouter);
 app.use("/", userRoute);
