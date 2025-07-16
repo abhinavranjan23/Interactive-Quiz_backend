@@ -18,13 +18,13 @@ app.use(
   })
 );
 
-app.use("/", (req, res) => {
-  res.send("Welcome to Interactive Quiz API");
-});
 app.use("/", adminRouter);
 app.use("/", quizzesRouter);
 app.use("/", userRoute);
 app.use("/", leaderboardRoute);
+app.get("/", (req, res) => {
+  res.send("Welcome to Interactive Quiz API");
+});
 
 app.use("/", (req, res, err) => {
   //
