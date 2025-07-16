@@ -8,6 +8,18 @@ const updateUserQuizAttempt = async (userId, quizId, score) => {
       return { success: false, message: "User not found" };
     }
 
+    const alreadyAttempted = user.quizAttempts.some(
+      (attempt) => attempt.quizId.toString() === quizId.toString()
+    );
+
+    if (alreadyAttempted) {
+      return {
+        success: false,
+        message: "Quiz already attempted ",
+      };
+    }
+
+    // Add new quiz attempt
     user.quizAttempts.push({ quizId, score });
     user.quizAttempted += 1;
     user.totalScore += score;
@@ -27,4 +39,5 @@ const updateUserQuizAttempt = async (userId, quizId, score) => {
     };
   }
 };
+
 module.exports = updateUserQuizAttempt;

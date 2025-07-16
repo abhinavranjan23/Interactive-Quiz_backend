@@ -6,16 +6,13 @@ const cookieParser = require("cookie-parser");
 const quizzesRouter = require("./routes/quizzes.js");
 const cors = require("cors");
 const adminRouter = require("./routes/admin.js");
-const userRoute = require("./routes/userAuthRoutes.js");
+const userRoute = require("./routes/userRoutes.js");
 const leaderboardRoute = require("./routes/leaderBoard.js");
-app.use(express.json()); // JSON body parsing
-app.use(cookieParser()); // Cookie parsing
+app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://l8hgmtrh-5173.inc1.devtunnels.ms",
-    ],
+    origin: "http://localhost:5173",
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })

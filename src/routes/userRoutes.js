@@ -184,25 +184,24 @@ userRoute.post("/user/update-score/:quizId", userAuth, async (req, res) => {
     }
     let leaderboardEntry = await Leaderboard.findOne({ user: userId });
 
-    if (!leaderboardEntry) {
-      leaderboardEntry = await Leaderboard.create({
-        user: userId,
-        totalScore: score,
-        quizAttempted: 1,
-      });
-    } else {
-      leaderboardEntry.totalScore += score;
-      leaderboardEntry.quizAttempted += 1;
-      await leaderboardEntry.save();
-    }
-
     await updateLeaderboardRanks();
     const result = await updateUserQuizAttempt(userId, quizId, score);
 
     if (result.success) {
+      if (!leaderboardEntry) {
+        leaderboardEntry = await Leaderboard.create({
+          user: userId,
+          totalScore: score,
+          quizAttempted: 1,
+        });
+      } else {
+        leaderboardEntry.totalScore += score;
+        leaderboardEntry.quizAttempted += 1;
+        await leaderboardEntry.save();
+      }
       res.status(200).json(result);
     } else {
-      res.status(500).json(result);
+      res.status(500).json({ error: result.message });
     }
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
